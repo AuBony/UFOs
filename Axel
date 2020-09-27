@@ -1,68 +1,61 @@
-UFO
+###################
+#Analyse textuelle#
+###################
+
+## Chargement du jeu de données
 data <- read.csv("C:/Users/axels/OneDrive/Documents/Institut Agro/Agrocampus Ouest/UFOs/archive/scrubbed.csv", header = T)
-mydata <- data[1:500,]
-require(Factoshiny)
-books_tidy <- mydata$comments %>%
-  mutate(text = stringr::str_replace_all(.$text, "’", " ")) %>% 
-  unnest_tokens(word, text) %>%
-  filter(!word %in% stopwords_iso$fr) %>%
-  count(word, sort = TRUE) %>%
-  head(10)
-install.packages("SnowballC") # pour le text stemming
-install.packages("wordcloud") # générateur de word-cloud 
-install.packages("RColorBrewer")
-library("tm")
-library("SnowballC")
-library("wordcloud")
-library("RColorBrewer")
-docs <- Corpus(VectorSource(mydata$comments))
-inspect(docs)
-toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
-docs <- tm_map(docs, toSpace, "/")
-docs <- tm_map(docs, toSpace, "@")
-docs <- tm_map(docs, toSpace, "\\|")
+mydata <- data[1:500,] #Echantillon avec les 500 premières lignes pour la rapidité d'exécution
 
-# Convertir le texte en minuscule
-docs <- tm_map(docs, content_transformer(tolower))
-# Supprimer les nombres
-docs <- tm_map(docs, removeNumbers)
-# Supprimer les mots vides anglais
-docs <- tm_map(docs, removeWords, stopwords("english"))
-# Supprimer votre propre liste de mots non désirés
-docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
-# Supprimer les ponctuations
-docs <- tm_map(docs, removePunctuation)
-# Supprimer les espaces vides supplémentaires
-docs <- tm_map(docs, stripWhitespace)
-# Text stemming
-# docs <- tm_map(docs, stemDocument)
-dtm <- TermDocumentMatrix(docs)
-m <- as.matrix(dtm)
-v <- sort(rowSums(m),decreasing=TRUE)
-d <- data.frame(word = names(v),freq=v)
-head(d, 10)
+## Appel des packages nécessaires
+library("tm") # Text mining
+library("wordcloud") # Représentation du nuage de mots
+library("SnowballC") # Racinisation des mots (on prend leur radical)
+library("RColorBrewer") # Pour les couleurs
 
+## Chargement du texte de la colonne commentaires
+texte <- Corpus(VectorSource(mydata$comments)) #VectorSource créé un ensemble de vecteurs de textes
+inspect(texte) #Observer le corpus de textes (les vecteurs de textes)
+
+
+## Nettoyage du texte
+
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x)) # Caractères spéciaux en espace
+texte <- tm_map(texte, toSpace, "/")
+texte <- tm_map(texte, toSpace, "@")
+texte <- tm_map(texte, toSpace, "\\|")
+
+
+texte <- tm_map(texte, content_transformer(tolower)) # Texte en minuscule
+texte <- tm_map(texte, removeNumbers) # Supprimer les nombres
+texte <- tm_map(texte, removeWords, stopwords("english")) # Supprimer les mots vides
+texte <- tm_map(texte, removeWords, c("mot1", "mot2")) # Supprimer des mots à définir
+texte <- tm_map(texte, removePunctuation) # Supprimer la  ponctuation
+texte <- tm_map(texte, stripWhitespace) # Supprimer les espaces vides supplémentaires
+
+texte <- tm_map(texte, stemDocument) # Réduit les mots à leur racine (Text stemming)
+
+
+## Matrice des mots (term-documents matrix), donne leur nombre d'occurence
+dtm <- TermDocumentMatrix(texte)
+m <- as.matrix(dtm) # Transforme en matrice
+v <- sort(rowSums(m),decreasing=TRUE) # Trier par ordre décroissant
+Tableau <- data.frame(word = names(v),freq=v) # Transforme en data frame
+head(Tableau, 10) # 10 mots les plus employés
+
+
+## Nuage de mots
 set.seed(1234)
-wordcloud(words = d$word, freq = d$freq, min.freq = 1,
-          max.words=200, random.order=FALSE, rot.per=0.35, 
+wordcloud(words = Tableau$word, freq = Tableau$freq, min.freq = 20,
+          max.words=200, random.order=FALSE, rot.per=0, 
           colors=brewer.pal(8, "Dark2"))
-findFreqTerms(dtm, lowfreq = 4)
 
 
-barplot(d[1:10,]$freq, las = 2, names.arg = d[1:10,]$word,
-        col ="lightblue", main ="Most frequent words",
-        ylab = "Word frequencies")
+## Diagramme de la fréquence des mots
+barplot(Tableau[1:10,]$freq, las = 2, names.arg = Tableau[1:10,]$word,
+        col ="green", main ="Mots les plus utilisés",
+        ylab = "Nombre d'apparition du mot")
 
+# Source : http://www.sthda.com/french/wiki/text-mining-et-nuage-de-mots-avec-le-logiciel-r-5-etapes-simples-a-savoir#etape-1-creez-un-fichier-texte
 
-
-
-library(ggraph)
-my_graph <- word %>%
-  ggraph::ggraph(layout = "fr") +
-  ggraph::geom_edge_link(edge_colour="steelblue") +
-  ggraph::geom_node_point(color = "khaki1", size = 5) +
-  ggraph::geom_node_text(aes(label = name), repel = TRUE) +
-  ggplot2::theme_void()
-plot(my_graph)
 
 
