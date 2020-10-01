@@ -48,6 +48,11 @@ set.seed(1234)
 wordcloud(words = Tableau$word, freq = Tableau$freq, min.freq = 20,
           max.words=200, random.order=FALSE, rot.per=0, 
           colors=brewer.pal(8, "Dark2"))
+# Version pour fichier lourd
+wordcloud(texte, max.words = 20, colors = brewer.pal(8, "Dark2"),  rot.per=0)
+
+wordcloud(texte, min.freq = 2, scale = c(4, 0.5), random.order = FALSE, 
+          random.color = TRUE, rot.per = 0.1, colors = brewer.pal(8, "Dark2"))
 
 
 ## Diagramme de la fréquence des mots
