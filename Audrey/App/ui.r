@@ -7,8 +7,7 @@
 #    http://shiny.rstudio.com/
 #
 
-#anatextu : Analyse Textuelle
-
+#Package
 library(shiny)
 library(colourpicker)
 library(leaflet)
