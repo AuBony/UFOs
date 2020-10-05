@@ -1,0 +1,38 @@
+# Observations par an 
+mydata <- read_csv("C:/Users/axels/OneDrive/Documents/Institut Agro/Agrocampus Ouest/UFOs/archive/scrubbed.csv")
+mydata$datetime <- mdy_hm(mydata$datetime)
+library(plotly)
+mydata %>%
+  count(floor_date(datetime, "year")) %>%
+  arrange(`floor_date(datetime, "year")`) %>%
+  plot_ly(x = ~`floor_date(datetime, "year")`, y = ~n) %>%
+  add_lines() %>%
+  layout(title = "<b>Nombre d'OVNIs par an <b>",
+         xaxis = list(title = "<b> Année <b>"),
+         yaxis = list(title = "<b> Nombre d'OVNIs <b>"))
+
+# Observations par heure 
+mydata <- read_csv("C:/Users/axels/OneDrive/Documents/Institut Agro/Agrocampus Ouest/UFOs/archive/scrubbed.csv")
+mydata$datetime <- mdy_hm(mydata$datetime)
+library(plotly)
+mydata %>%
+  count(hour(datetime)) %>%
+  arrange(`hour(datetime)`) %>%
+  plot_ly(x = ~`hour(datetime)`, y = ~n) %>%
+  add_lines() %>%
+  layout(title = "<b> Heure d'apparition des OVNIs <b>",
+         xaxis = list(title = "<b> Heure <b>"),
+         yaxis = list(title = "<b> Nombre d'OVNIs total <b>"))
+
+# Observations par mois 
+mydata <- read_csv("C:/Users/axels/OneDrive/Documents/Institut Agro/Agrocampus Ouest/UFOs/archive/scrubbed.csv")
+mydata$datetime <- mdy_hm(mydata$datetime)
+library(plotly)
+mydata %>%
+  count(month(datetime)) %>%
+  arrange(`month(datetime)`) %>%
+  plot_ly(x = ~`month(datetime)`, y = ~n) %>%
+  add_lines() %>%
+  layout(title = "<b> Apparitions au cours des mois <b>",
+         xaxis = list(title = "<b> Mois <b>"),
+         yaxis = list(title = "<b> Nombre d'OVNIs total <b>"))
