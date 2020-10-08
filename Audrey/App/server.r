@@ -3,6 +3,8 @@ library(colourpicker)
 library(leaflet)
 library(ggplot2)
 
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # Répertoire de travail = répertoire du fichier R 
+
 source("analyse_textuelle.r")
 source("carte.r")
 source("summary.R")
@@ -32,14 +34,15 @@ shinyServer(function(input, output, session) {
                  color = "#a500a5")
   })
   
-  #Analyse Textuelle
+   #Analyse Textuelle
   output$anatextu.carte <- renderPlot({
 
     x=texte
-    wordcloud(x, min.freq = input$anatextu.min.freq, scale = c(4, 0.5), random.order = FALSE,
-              random.color = TRUE, rot.per = 0.1, colors = brewer.pal(8, "Dark2"))
+    set.seed(1234)
+    wordcloud(x, min.freq = input$anatextu.min.freq, scale = c(12, 1.2), random.order = FALSE,
+    random.color = TRUE, rot.per = 0.1, colors = brewer.pal(8, "Dark2"))
   })
-
+ 
   #Summary
   output$hist_forme <- renderPlot({
      ggplot(data_hist_ord[as.numeric(input$hist_checkGroup),], aes(x = shape, y = n, fill = shape)) +
