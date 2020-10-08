@@ -3,12 +3,15 @@ library(colourpicker)
 library(leaflet)
 library(ggplot2)
 
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # Répertoire de travail = répertoire du fichier R (où on doit mettre les data, du coup)
+
+
 source("analyse_textuelle.r")
 source("carte.r")
 source("summary.R")
 
  # Define server logic required to draw a histogram
-shinyServer(function(input, output, session) {
+shinyServer(function(input, output) {
   
   #Carte
   output$carte.carte <- renderLeaflet({
@@ -36,18 +39,17 @@ shinyServer(function(input, output, session) {
   output$anatextu.carte <- renderPlot({
 
     x=texte
-    wordcloud(x, min.freq = input$anatextu.min.freq, scale = c(4, 0.5), random.order = FALSE,
-              random.color = TRUE, rot.per = 0.1, colors = brewer.pal(8, "Dark2"))
+    set.seed(1234)
+    wordcloud(x, min.freq = input$anatextu.min.freq, scale = c(12, 1.2), random.order = FALSE,
+    random.color = TRUE, rot.per = 0.1, colors = brewer.pal(8, "Dark2"))
   })
 
   #Summary
   output$hist_forme <- renderPlot({
-     ggplot(data_hist_ord[as.numeric(input$hist_checkGroup),], aes(x = shape, y = n, fill = shape)) +
-        geom_bar(stat = "identity", alpha = .6, width = .4) +
-        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
-      
+    ggplot(data_hist, aes(x = shape, y = n, fill = shape)) +
+      geom_bar(stat = "identity", alpha = .6, width = .4) +
+      theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
+    
   })
-
-  
 
 })
