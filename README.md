@@ -1,2 +1,0 @@
-# UFOs
-Projet Master Statistiques
