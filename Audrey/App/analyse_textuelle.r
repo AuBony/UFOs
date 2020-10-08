@@ -1,7 +1,7 @@
 ### Analyse Textuelle
 
-
-data <- read.csv("E:/Cours/M2_Stat/UFOs/App/scrubbed.csv")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # Répertoire de travail = répertoire du fichier R (où on doit mettre les data, du coup)
+data <- read.csv("scrubbed.csv")
 mydata <- data[1:500,] #Echantillon avec les 500 premières lignes pour la rapidité d'exécution
 
 
