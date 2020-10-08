@@ -7,7 +7,8 @@
 #    http://shiny.rstudio.com/
 #
 
-#Package
+#anatextu : Analyse Textuelle
+
 library(shiny)
 library(colourpicker)
 library(leaflet)
@@ -41,15 +42,14 @@ shinyUI(
              #Carte
              tabPanel("Carte du monde",
                       fluidRow(
-                        column(width=3,
+                        column(width=6,
                                wellPanel(
                                  sliderInput("carte.min.sighting",
                                              "Minimum d'observations dans la ville :",
                                              min = 10,
                                              max = 300,
                                              value=100
-                                 )
-                               )
+                                 ))
                         ),
                         column(width=9,
                                leafletOutput("carte.carte")
@@ -60,9 +60,50 @@ shinyUI(
              
              #Summary
              tabPanel("Summary",
+                      
                       fluidRow(
-                        column(width = 12/3,
-                               plotOutput("hist_forme"))
-                      ))
+                        
+                        column(width = 12/2,
+                               plotOutput("hist_forme")
+                        ),
+                        
+                        column(width = 12/4
+                        ),
+                        
+                        column(width = 12/4, 
+                               checkboxGroupInput("hist_checkGroup", 
+                                                  h3("Shape selection"), 
+                                                  choices = list("changing" = 1,
+                                                                 "chevron" = 2,
+                                                                 "cigar" = 3,
+                                                                 "circle" = 4,
+                                                                 "crescent" = 5,
+                                                                 "cross" = 6,
+                                                                 "cone" = 7,
+                                                                 "cylinder" = 8,
+                                                                 "diamond" = 9,
+                                                                 "egg"= 10, 
+                                                                 "fireball" = 11,
+                                                                 "flare" = 12,
+                                                                 "flash" = 13,
+                                                                 "formation" = 14,
+                                                                 "hexagon" = 15,
+                                                                 "light" = 16,
+                                                                 "oval" = 17,
+                                                                 "pyramid" = 18,
+                                                                 "rectangle" = 19,
+                                                                 "round" = 20,
+                                                                 "sphere" = 21,
+                                                                 "teardrop" = 22,
+                                                                 "triangle" = 23,
+                                                                 "unknown" = 24
+                                                  ),
+                                                  selected = c(4, 11, 16, 23)
+                                )
+                        )
+                        
+                      )
+            )
   )
 )
+
