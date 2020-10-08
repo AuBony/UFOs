@@ -8,7 +8,7 @@ source("carte.r")
 source("summary.R")
 
  # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   
   #Carte
   output$carte.carte <- renderLeaflet({
@@ -42,10 +42,12 @@ shinyServer(function(input, output) {
 
   #Summary
   output$hist_forme <- renderPlot({
-    ggplot(data_hist, aes(x = shape, y = n, fill = shape)) +
-      geom_bar(stat = "identity", alpha = .6, width = .4) +
-      theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
-    
+     ggplot(data_hist_ord[as.numeric(input$hist_checkGroup),], aes(x = shape, y = n, fill = shape)) +
+        geom_bar(stat = "identity", alpha = .6, width = .4) +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
+      
   })
+
+  
 
 })
