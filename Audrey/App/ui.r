@@ -51,7 +51,6 @@ shinyUI(
              
              #Donnees
              tabPanel("Donnees",
-                      DT::dataTableOutput("table"),
                       
                       column(4,
                              selectInput("table_shape",
@@ -60,7 +59,9 @@ shinyUI(
                                            unique(as.character(data$shape))
                                           )
                               )
-                      )
+                      ),
+                      
+                      DT::dataTableOutput("table")
               ),
              
              #Survol des Données
