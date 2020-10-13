@@ -11,6 +11,9 @@ source("summary.R")
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   
+  #Donnees
+  output$table <- DT::renderDataTable(data)
+  
   #Carte
   output$carte.carte <- renderLeaflet({
     xy <- data_xy[sighting >input$carte.min.sighting, .(longitude, latitude, city, sighting)]
