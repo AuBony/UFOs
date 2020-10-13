@@ -48,7 +48,9 @@ shinyUI(
                       
              ),
              
-             
+             tabPanel("Donnees",
+                      DT::dataTableOutput("table")
+              ),
              
              #Survol des Données
              navbarMenu("Survol des données",
