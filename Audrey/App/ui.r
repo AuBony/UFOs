@@ -27,9 +27,25 @@ shinyUI(
              
              
              
+             #Accueil
              tabPanel("Accueil",
-                      div("Test", align = "center", size="200%"),
-                      tags$q("Test", style=("font-size: 200%; color: #FFFFFF; "))
+                      splitLayout(
+                        tags$div(
+                          h1("Bienvenue !"),
+                          hr(),
+                          p("Cette application shiny a vu le jours dans le cadre d\'un projet de Master 2 Datascience a Agrocampus Ouest.")
+                          
+                        )
+                      ),
+                      
+                      splitLayout(
+                        tags$div(
+                          h1("Presentation des donnees"),
+                          p("Nous avons trouve notre jeu sur kaggle")
+                          
+                        )
+                      )
+                      
              ),
              
              
@@ -90,82 +106,87 @@ shinyUI(
 
 
   
-  tabPanel("Truc2",
-           sidebarLayout(
-             sidebarPanel(
-               textInput("Truc", "truc", value="Tructruc"),
-               br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
-               br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
-               width=2
-             ),
-             mainPanel(
-               div("plopidou"),
-               width=10
-             )
-           )
-  ),
-  tabPanel("Truc3"
-           
-  )
-),
+            tabPanel("Truc2",
+                     sidebarLayout(
+                       sidebarPanel(
+                         textInput("Truc", "truc", value="Tructruc"),
+                         br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
+                         br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
+                         width=2
+                       ),
+                       mainPanel(
+                         div("plopidou"),
+                         width=10
+                       )
+                     )
+            ),
+            
+            tabPanel("Truc3"
+                     
+            )
+          ),
 
 
 
-#Analyse Textuelle
-tabPanel("Analyse textuelle",
-         fluidRow(
-           column(width=2,
-                  wellPanel(
-                    sliderInput("anatextu.min.freq",
-                                "Minimum d'occurrence des mots pris en compte :",
-                                min = 2,
-                                max = 10,
-                                value=5
-                    )
-                  )
-           ),
-           column(width=10,
-                  #   tabPanel("Carte de mots",
-                  plotOutput("anatextu.carte", height="1000px")
-                  #  )
-           )
-         )
-),
+          #Analyse Textuelle
+          tabPanel("Analyse textuelle",
+                   fluidRow(
+                     column(width=2,
+                            wellPanel(
+                              sliderInput("anatextu.min.freq",
+                                          "Minimum d'occurrence des mots pris en compte :",
+                                          min = 2,
+                                          max = 10,
+                                          value=5
+                              )
+                            )
+                     ),
+                     column(width=10,
+                            #   tabPanel("Carte de mots",
+                            plotOutput("anatextu.carte", height="1000px")
+                            #  )
+                     )
+                   )
+          ),
 
 
 
-#Carte
-tabPanel("Carte du monde",
-         fluidRow(
-           column(width=3,
-                  wellPanel(
-                    sliderInput("carte.min.sighting",
-                                "Minimum d'observations dans la ville :",
-                                min = 10,
-                                max = 300,
-                                value=100
-                    )
-                  )
-           ),
-           column(width=9,
-                  leafletOutput("carte.carte")
-                  
-           )
-         )
-),
+          #Carte
+          tabPanel("Carte du monde",
+                   fluidRow(
+                     column(width=3,
+                            wellPanel(
+                              sliderInput("carte.min.sighting",
+                                          "Minimum d'observations dans la ville :",
+                                          min = 10,
+                                          max = 300,
+                                          value=100
+                              )
+                            )
+                     ),
+                     column(width=9,
+                            leafletOutput("carte.carte")
+                            
+                     )
+                   )
+          ),
 
 
 
-tabPanel("Etude temporelle des données", 
-         fluidRow(
-           plotOutput("dygraph")
-         )
-),
+          tabPanel("Etude temporelle des données", 
+                   fluidRow(
+                     plotOutput("dygraph")
+                   )
+          ),
 
 
 
-tabPanel("AFM"
-)
+          tabPanel("Credit",
+                   fluidPage(
+                     tags$video(src = "")
+                   )
+                   
+          )
 
 
 
