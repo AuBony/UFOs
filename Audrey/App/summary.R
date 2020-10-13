@@ -12,7 +12,7 @@ data_na <- as.data.table(data_na)
 data_hist <- data_na[, list(n = .N), by = shape]
 
 data_hist
-#On enlÃ¨ve les donnees manquante
+#On enlève les donnees manquante
 data_hist <- data_hist[-15,]
 
 #On rassemble circle et disk
@@ -30,5 +30,4 @@ data_hist <- data_hist[-8,]
 #Order
 data_hist_ord <- data_hist[order(n, decreasing = T)]
 data_hist_ord$shape = with(data_hist_ord, reorder(shape, n, mean))
-
 
