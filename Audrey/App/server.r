@@ -2,7 +2,7 @@ library(shiny)
 library(colourpicker)
 library(leaflet)
 library(ggplot2)
-
+library(DT)
 
 source("analyse_textuelle.r")
 source("carte.r")
@@ -12,7 +12,15 @@ source("summary.R")
 shinyServer(function(input, output) {
   
   #Donnees
-  output$table <- DT::renderDataTable(data)
+  output$table <- DT::renderDataTable(
+    DT::datatable(
+      {d <- data
+      if(input$table_shape != "All") {
+        d <- d[d$shape == input$table_shape,]
+      }
+      d}
+      ) %>% formatStyle(names(d), color = 'black')
+    )
   
   #Carte
   output$carte.carte <- renderLeaflet({
