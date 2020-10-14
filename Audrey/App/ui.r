@@ -58,6 +58,12 @@ shinyUI(
                                          c("All",
                                            unique(as.character(data$shape))
                                           )
+                              ),
+                             selectInput("table_country",
+                                         "Pays : ",
+                                         c("All", 
+                                           unique(as.character(data$country))
+                                           )
                               )
                       ),
                       
