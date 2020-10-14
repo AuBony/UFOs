@@ -1,0 +1,91 @@
+###################
+#Analyse textuelle#
+###################
+setwd("C:/Users/axels/OneDrive/Bureau")
+## Chargement du jeu de données
+data <- read.csv("C:/Users/axels/OneDrive/Documents/Institut Agro/Agrocampus Ouest/UFOs/archive/scrubbed.csv", header = T)
+mydata <- data[1:5000,] #Echantillon avec les 500 premiÃ¨res lignes pour la rapiditÃ© d'exÃ©cution
+mydata$latitude <- as.numeric(as.character(mydata$latitude))
+mydata$duration..seconds. <- as.numeric(as.character(mydata$duration..seconds.))
+
+## Appel des packages nécessaires
+library("tm") # Text mining
+library("wordcloud") # Représentation du nuage de mots
+library("SnowballC") # Racinisation des mots (on prend leur radical)
+library("RColorBrewer") # Pour les couleurs
+
+## Chargement du texte de la colonne commentaires
+texte <- Corpus(VectorSource(mydata$comments)) #VectorSource créer un ensemble de vecteurs de textes
+inspect(texte) #Observer le corpus de textes (les vecteurs de textes)
+
+
+## Nettoyage du texte
+
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x)) # CaractÃ¨res spÃ©ciaux en espace
+texte <- tm_map(texte, toSpace, "/")
+texte <- tm_map(texte, toSpace, "@")
+texte <- tm_map(texte, toSpace, "\\|")
+
+
+texte <- tm_map(texte, content_transformer(tolower)) # Texte en minuscule
+texte <- tm_map(texte, removeNumbers) # Supprimer les nombres
+texte <- tm_map(texte, removeWords, stopwords("english")) # Supprimer les mots vides
+texte <- tm_map(texte, removeWords, c("mot1", "mot2")) # Supprimer des mots Ã  dÃ©finir
+texte <- tm_map(texte, removePunctuation) # Supprimer la  ponctuation
+texte <- tm_map(texte, stripWhitespace) # Supprimer les espaces vides supplÃ©mentaires
+
+texte <- tm_map(texte, stemDocument) # RÃ©duit les mots Ã  leur racine (Text stemming)
+
+
+## Matrice des mots (term-documents matrix), donne leur nombre d'occurence
+dtm <- TermDocumentMatrix(texte)
+m2 <- as.matrix(TermDocumentMatrix(texte))
+m <- as.matrix(dtm) # Transforme en matrice
+v <- sort(rowSums(m),decreasing=TRUE) # Trier par ordre dÃ©croissant
+Tableau <- data.frame(word = names(v),freq=v) # Transforme en data frame
+head(Tableau, 10) # 10 mots les plus employÃ©s
+
+
+
+## Diagramme de la frÃ©quence des mots
+barplot(Tableau[1:10,]$freq, las = 2, names.arg = Tableau[1:10,]$word,
+        col ="green", main ="Mots les plus utilisés",
+        ylab = "Nombre d'apparition du mot")
+
+
+
+###############################
+
+# Wordcloud2
+library("wordcloud2")
+
+
+# Etoile
+wordcloud2(Tableau, size = 0.7, shape = 'star')
+
+
+## Liaison mots
+library(R.temis)
+corpus <- import_corpus("C:/Users/axels/OneDrive/Documents/Institut Agro/Agrocampus Ouest/UFOs/archive/scrubbed.csv", format = "csv", language = "en", textcolumn = 8)
+dtm <- build_dtm(corpus, remove_stopwords = TRUE) # Document Term Matrix
+dtm
+
+lexique <- dictionary(dtm, remove_stopwords = TRUE)
+View(lexique) #Tous les mots et leurs occurences sans les mots de liaison. Transformés en radical
+
+nuage <- word_cloud(dtm, color = "blue", n= 100, min.freq = 10) # Wordcloud pas génial (à ne pas mettre)
+
+
+frequent_terms(dtm)
+
+library(questionr)
+tab1 <- freq(meta(corpus)$country)
+tab1 # Réponse par pays
+
+lexical_summary(dtm, corpus, "country", unit = "global")
+
+specific_terms(dtm, meta(corpus)$country)
+
+characteristic_docs(corpus, dtm, meta(corpus)$country) # Mots les plus utilisés par pays
+
+
