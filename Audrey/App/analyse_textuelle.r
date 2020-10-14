@@ -31,3 +31,7 @@ texte <- tm_map(texte, removePunctuation) # Supprimer la  ponctuation
 texte <- tm_map(texte, stripWhitespace) # Supprimer les espaces vides supplémentaires
 
 texte <- tm_map(texte, stemDocument) # Réduit les mots à leur racine (Text stemming)
+
+# library(FactoMineR)
+# print(texte[1])
+# MCA(texte)
