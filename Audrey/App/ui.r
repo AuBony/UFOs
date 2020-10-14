@@ -1,11 +1,3 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
 #Package
 library(shiny)
@@ -13,11 +5,17 @@ library(colourpicker)
 library(leaflet)
 library(ggplot2)
 library(shinythemes)
+library(DT)
+library(dygraphs)
+
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # Répertoire de travail = répertoire du fichier R (où on doit mettre les data, du coup)
 
 
 source("analyse_textuelle.r")
 source("carte.r")
 source("summary.R")
+source("etude_temporelle.R")
 
 
 
@@ -27,26 +25,13 @@ shinyUI(
              
              
              
-             #Accueil
              tabPanel("Accueil",
-                      splitLayout(
-                        tags$div(
-                          h1("Bienvenue !"),
-                          hr(),
-                          p("Cette application shiny a vu le jours dans le cadre d\'un projet de Master 2 Datascience a Agrocampus Ouest.")
-                          
-                        )
-                      ),
-                      
-                      splitLayout(
-                        tags$div(
-                          h1("Presentation des donnees"),
-                          p("Nous avons trouve notre jeu sur kaggle")
-                          
-                        )
-                      )
-                      
+                      div("Test", align = "center", size="200%"),
+                      tags$q("Test", style=("font-size: 200%; color: #FFFFFF; ")  )
              ),
+             # Description du jeu de données (dans une fenêtre où scroller ?), décrire notre groupe (On fait ca dans le cadre d'un projet...)
+             # Nos objectifs ? Mettre un sommaire ? 
+             
              
              
              #Donnees
@@ -57,27 +42,60 @@ shinyUI(
                                          "Forme : ",
                                          c("All",
                                            unique(as.character(data$shape))
-                                          )
-                              ),
-                             selectInput("table_country",
-                                         "Pays : ",
-                                         c("All", 
-                                           unique(as.character(data$country))
-                                           )
-                              )
+                                         )
+                             )
                       ),
                       
                       DT::dataTableOutput("table")
-              ),
+             ),
              
-             #Survol des DonnÃ©es
-             navbarMenu("Survol des donnÃ©es",
-                        tabPanel("RÃ©sumÃ© du jeu de donnÃ©es"
-                                 
+             
+             
+             # Carte
+             tabPanel("Carte du monde",
+                      navlistPanel(widths= c(1,11),
+                                   tabPanel("Carte 1",
+                                            fluidRow(
+                                              column(width=3,
+                                                     wellPanel(
+                                                       sliderInput("carte.min.sighting",
+                                                                   "Minimum d'observations dans la ville :",
+                                                                   min = 10,
+                                                                   max = 300,
+                                                                   value=100
+                                                       )
+                                                     )
+                                              ),
+                                              column(width=9,
+                                                     leafletOutput("carte.carte")
+                                                     
+                                              )
+                                            )
+                                   ),
+                                   tabPanel("Carte 2",
+                                            fluidRow(
+                                              column(width=3,
+                                                     wellPanel(
+                                                       
+                                                     )
+                                              ),
+                                              column(width=9,
+                                                     leafletOutput("carte.carte_monde")
+                                                     
+                                              )
+                                            )
+                                   )
+                      )
+             ),
+             
+             
+             
+             # Etude des Données
+             navbarMenu("Etude des données",
+                        tabPanel("Résumé du jeu de données"
                                  
                         ),
                         
-                        #Summary
                         tabPanel("Formes des OVNIS",
                                  
                                  fluidRow(
@@ -91,7 +109,7 @@ shinyUI(
                                    
                                    column(width = 12/4, 
                                           checkboxGroupInput("hist_checkGroup", 
-                                                             h3("SÃ©lectionnez la forme"), 
+                                                             h3("Sélectionnez la forme"), 
                                                              choices = list("changing" = 10,
                                                                             "chevron" = 15,
                                                                             "cigar" = 9,
@@ -123,92 +141,105 @@ shinyUI(
                                    
                                  )
                         ),
-
-
-  
-            tabPanel("Truc2",
-                     sidebarLayout(
-                       sidebarPanel(
-                         textInput("Truc", "truc", value="Tructruc"),
-                         br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
-                         br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
-                         width=2
-                       ),
-                       mainPanel(
-                         div("plopidou"),
-                         width=10
-                       )
-                     )
-            ),
-            
-            tabPanel("Truc3"
-                     
-            )
-          ),
-
-
-
-          #Analyse Textuelle
-          tabPanel("Analyse textuelle",
-                   fluidRow(
-                     column(width=2,
-                            wellPanel(
-                              sliderInput("anatextu.min.freq",
-                                          "Minimum d'occurrence des mots pris en compte :",
-                                          min = 2,
-                                          max = 10,
-                                          value=5
-                              )
-                            )
-                     ),
-                     column(width=10,
-                            #   tabPanel("Carte de mots",
-                            plotOutput("anatextu.carte", height="1000px")
-                            #  )
-                     )
-                   )
-          ),
-
-
-
-          #Carte
-          tabPanel("Carte du monde",
-                   fluidRow(
-                     column(width=3,
-                            wellPanel(
-                              sliderInput("carte.min.sighting",
-                                          "Minimum d'observations dans la ville :",
-                                          min = 10,
-                                          max = 300,
-                                          value=100
-                              )
-                            )
-                     ),
-                     column(width=9,
-                            leafletOutput("carte.carte")
-                            
-                     )
-                   )
-          ),
-
-
-
-          tabPanel("Etude temporelle des donnÃ©es", 
-                   fluidRow(
-                     plotOutput("dygraph")
-                   )
-          ),
-
-
-          #Credit
-          tabPanel("Credit",
-                   fluidPage(
-                     HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/pSb7PxPbi6k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
-                   )
-                   
-          )
-
-
-
-)
+                        
+                        tabPanel("Répartition par état/pays",
+                                 fluidRow(
+                                   column(width = 12/3,
+                                          plotOutput("hist_forme_countrystate"),
+                                          div("Occurrence des apparitions d'OVNIs par état/pays", align="center")
+                                   )
+                                   
+                                 )
+                        ),
+                        
+                        tabPanel("Etude temporelle des données",
+                                 
+                                 fluidRow(
+                                   column(width = 12/3,
+                                          wellPanel(
+                                            radioButtons("etude_tempo_echelle",
+                                                         "Choix de l'échelle d'observation :",
+                                                         c("Année" = "echelle_annee",
+                                                           "Mois" = "echelle_mois",
+                                                           "Jour" = "echelle_jour") 
+                                            )
+                                            
+                                          )
+                                   ),
+                                   
+                                   column(width = 12/2,
+                                          plotlyOutput("etude_tempo")
+                                   )
+                                 )
+                        ),
+                        
+                        tabPanel("Truc2",
+                                 sidebarLayout(
+                                   sidebarPanel(
+                                     textInput("Truc", "truc", value="Tructruc"),
+                                     br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
+                                     br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
+                                     width=2
+                                   ),
+                                   mainPanel(
+                                     div("plopidou"),
+                                     width=10
+                                   )
+                                 )
+                        ),
+                        
+                        tabPanel("Truc3",
+                                 navlistPanel(
+                                   tabPanel("sous-Truc3",
+                                            
+                                   ),
+                                   tabPanel("Sous-Truc 2 de 3",
+                                            
+                                   )
+                                   
+                                   
+                                   
+                                 )
+                                 
+                        ),
+                        tabPanel("Etude temporelle des données", 
+                                 fluidRow(
+                                   dygraphOutput("dygraph")
+                                 )
+                        )
+             ),
+             
+             
+             
+             # Analyse Textuelle
+             tabPanel("Analyse textuelle",
+                      fluidRow(
+                        column(width=2,
+                               wellPanel(
+                                 sliderInput("anatextu.min.freq",
+                                             "Minimum d'occurrence des mots pris en compte :",
+                                             min = 2,
+                                             max = 10,
+                                             value=5
+                                 )
+                               )
+                        ),
+                        column(width=10,
+                               #   tabPanel("Carte de mots",
+                               plotOutput("anatextu.carte", height="1000px")
+                               #  )
+                        )
+                      )
+             ),
+             
+             
+             
+             #Credit
+             tabPanel("Credit",
+                      fluidPage(
+                        HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/pSb7PxPbi6k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+                      )
+                      
+             )
+  )
 )
