@@ -1,0 +1,52 @@
+######################
+# A mettre dans l'UI #
+######################
+
+fluidPage(
+    titlePanel("UFOs"),
+    
+    fluidRow(
+        column(4, wellPanel(
+            radioButtons("picture", "Picture:",
+                         c("Vole", "Course"))
+        )),
+        column(4,
+               imageOutput("image2", height = 300 )
+        )
+    )
+)
+
+
+############################
+# A mettre dans le serveur # (au sens figuré, du respect pour nos personnels de restauration svp)
+############################
+
+library(gapminder)
+library(ggplot2)
+library(shiny)
+library(gganimate)
+theme_set(theme_bw())
+
+function(input, output, session) {
+    
+    
+    output$image2 <- renderImage({
+        if (is.null(input$picture))
+            return(NULL)
+        
+        if (input$picture == "Course") {
+            return(list(
+                src = "C:/Users/axels/OneDrive/Bureau/alienrun1W.gif",
+                contentType = "image/gif",
+                alt = "Alien qui court" # Texte si l'image ne charge pas
+            ))
+        } else if (input$picture == "Vole") {
+            return(list(
+                src = "C:/Users/axels/OneDrive/Bureau/751.gif",
+                filetype = "image/gif",
+                alt = "Soucoupe qui tourne"
+            ))
+        }
+        
+    }, deleteFile = FALSE)
+}
