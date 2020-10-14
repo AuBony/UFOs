@@ -15,8 +15,13 @@ shinyServer(function(input, output) {
   output$table <- DT::renderDataTable(
     DT::datatable(
       {d <- data
+      
       if(input$table_shape != "All") {
         d <- d[d$shape == input$table_shape,]
+      }
+      
+      if(input$table_country != "All") {
+        d <- d[d$country == input$table_country,]
       }
       d}
       ) %>% formatStyle(names(d), color = 'black')
