@@ -15,8 +15,9 @@ library(tidyverse)
 library(plotly)
 theme_set(theme_bw())
 
-tableau_clean <- read.csv("~/Cours/TD AudeAxel/Audrey/ana_text_tableau.csv", na.strings="", dec=".", sep=";")
 
+setwd("C:/Users/Valentin/Documents/Cours/TD AudeAxel/Audrey")
+source("data_clean.r")
 source("carte.r")
 source("summary.R")
 
