@@ -3,13 +3,8 @@
 ###################
 setwd("C:/Users/Valentin/Documents/Cours/TD AudeAxel/Audrey")
 ## Chargement du jeu de donnÃ©es
-data <- read.csv("C:/Users/Valentin/Documents/Cours/TD AudeAxel/Audrey/scrubbed.csv", header = T)
-
-data_clean <- read.csv("~/Cours/TD AudeAxel/Audrey/data_clean.csv", na.strings="", dec=".", sep=";")
-data_clean$shape=as.factor(data_clean$shape)
-data_clean$shape2=as.factor(data_clean$shape2)
-data_clean$datetime=ymd_hms(data_clean$datetime)
-data_clean <- as.data.table(data_clean)
+setwd("C:/Users/Valentin/Documents/Cours/TD AudeAxel/Audrey")
+source("data_clean.r")
 
 data_clean_frag <- data_clean[sample(1:nrow(data_clean), 10000), ]#Echantillonne 10 000 données sur les 90 000 pour la rapiditÃ© d'exÃ©cution
 
