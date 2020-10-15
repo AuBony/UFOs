@@ -1,7 +1,7 @@
 ###################
 #Analyse textuelle#
 ###################
-setwd("C:/Users/Valentin/Documents/Cours/TD AudeAxel/Audrey")
+
 ## Chargement du jeu de donnÃ©es
 setwd("C:/Users/Valentin/Documents/Cours/TD AudeAxel/Audrey")
 source("data_clean.r")
