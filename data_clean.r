@@ -1,0 +1,5 @@
+data_clean <- read.csv("~/Cours/TD AudeAxel/Audrey/data_clean.csv", na.strings="", dec=".", sep=";")
+data_clean$shape=as.factor(data_clean$shape)
+data_clean$shape2=as.factor(data_clean$shape2)
+data_clean$datetime=ymd_hms(data_clean$datetime)
+data_clean <- as.data.table(data_clean)
