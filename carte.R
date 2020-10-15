@@ -4,10 +4,8 @@ library(data.table)
 library(readr)
 library(lubridate)
 
-data_clean <- read.csv("~/Cours/TD AudeAxel/Audrey/data_clean.csv", na.strings="", dec=".", sep=";")
-data_clean$shape=as.factor(data_clean$shape)
-data_clean$shape2=as.factor(data_clean$shape2)
-data_clean$datetime=ymd_hms(data_clean$datetime)
+setwd("C:/Users/Valentin/Documents/Cours/TD AudeAxel/Audrey")
+source("data_clean.r")
 
 ## Première carte 
 
