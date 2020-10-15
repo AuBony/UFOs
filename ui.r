@@ -21,8 +21,6 @@ library(wordcloud2)
 library(plotly)
 
 
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # Répertoire de travail = répertoire du fichier R (où on doit mettre les data, du coup)
-
 
 source("carte.r")
 source("summary.R")
